@@ -1,0 +1,41 @@
+vars: {
+  d2-config: {
+    layout-engine: elk
+  }
+}
+
+direction: down
+
+internet: Internet {shape: cloud}
+
+ucg: UCG-Fiber {shape: rectangle}
+usw: USW Pro 48 PoE {shape: rectangle}
+
+internet -> ucg: WAN
+ucg -> usw: Trunk
+
+vlan1: VLAN 1 - Default {shape: rectangle}
+vlan2: VLAN 2 - Home {shape: rectangle}
+vlan3: VLAN 3 - Cameras {shape: rectangle}
+vlan4: VLAN 4 - IoT {shape: rectangle}
+vlan5: VLAN 5 - Torrent {shape: rectangle}
+vlan20: VLAN 20 - WireGuard {shape: rectangle}
+vlan99: VLAN 99 - Guest {shape: rectangle}
+
+usw -> vlan1
+usw -> vlan2
+usw -> vlan3
+usw -> vlan4
+usw -> vlan5
+usw -> vlan20
+usw -> vlan99
+
+proxmox: Proxmox VM Host {shape: rectangle}
+railhub: RailHub (FastAPI + PostGIS) {shape: rectangle}
+homeassistant: Home Assistant (RPi) {shape: rectangle}
+hermes: Hermes - Mac Mini (Alfred) {shape: rectangle}
+
+vlan1 -> proxmox
+proxmox -> railhub: VM
+vlan2 -> homeassistant
+vlan2 -> hermes

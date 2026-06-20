@@ -1,0 +1,42 @@
+name: Render D2 Diagrams
+
+on:
+  push:
+    paths:
+      - 'docs/diagrams/**.d2'
+
+permissions:
+  contents: write
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install D2
+        run: curl -fsSL https://d2lang.com/install.sh | sh -s --
+
+      - name: Cache Playwright
+        id: cache-playwright
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-cache
+
+      - name: Install Playwright
+        if: steps.cache-playwright.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium
+
+      - name: Render diagrams
+        run: |
+          for f in docs/diagrams/*.d2; do
+            d2 --layout elk "$f" "${f%.d2}.png"
+          done
+
+      -
+cat > README.md << 'EOF'
+# Homelab
+
+## Network Diagram
+![Homelab Network](docs/diagrams/homelab.png)
