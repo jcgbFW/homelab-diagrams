@@ -39,4 +39,14 @@ vlan1 -> proxmox
 proxmox -> railhub: VM
 vlan2 -> homeassistant
 vlan2 -> hermes
- 
+att: AT&T BGW320 (IP Passthrough) {shape: rectangle}
+unvr: UNVR (4-bay NVR) {shape: rectangle}
+cloudflare: Cloudflare Tunnel {shape: rectangle}
+wireguard_clients: WireGuard Clients {shape: rectangle}
+
+internet -> att
+att -> ucg: IP Passthrough
+
+vlan3 -> unvr
+vlan20 -> wireguard_clients
+railhub -> cloudflare: outbound tunnel 
